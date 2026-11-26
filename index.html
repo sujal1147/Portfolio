@@ -17,16 +17,16 @@ body.locked{overflow:hidden}
 #gate{position:fixed;inset:0;z-index:100;background:#2a1a12;touch-action:none}
 #gate.gone{display:none}
 #gc{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
-#lock{position:absolute;left:50%;top:50%;width:calc(var(--P)*24);transform:translate(-50%,-50%);background:none;border:0;padding:0;z-index:2;transition:filter .2s ease}
+#lock{position:absolute;left:50%;top:50%;width:calc(var(--P)*16);transform:translate(-50%,-50%);background:none;border:0;padding:0;z-index:2;transition:filter .2s ease}
 #lock svg{width:100%;display:block;shape-rendering:crispEdges}
 #lock .sh{transition:transform .3s steps(4)}
-#lock:hover:not(.open){filter:drop-shadow(0 8px 6px rgba(0,0,0,.6)) brightness(1.08);animation:rattle .28s steps(2) infinite}
-@keyframes rattle{0%{transform:translate(-50%,-50%) rotate(-1.5deg)}100%{transform:translate(-50%,-50%) rotate(1.5deg)}}
+#lock:hover:not(.open){filter:drop-shadow(0 6px 5px rgba(0,0,0,.7)) brightness(1.15);animation:rattle .22s steps(2) infinite}
+@keyframes rattle{0%{transform:translate(-50%,-50%) rotate(-2deg)}100%{transform:translate(-50%,-50%) rotate(2deg)}}
 #lock.open .sh{transform:translate(0,-3px)}
 #lock.open{animation:pop .9s steps(8) forwards}
 @keyframes pop{to{transform:translate(-50%,-50%) scale(9);opacity:0}}
 #lock:focus-visible{outline:4px dashed var(--paper);outline-offset:8px}
-#hint{position:absolute;left:50%;bottom:calc(7% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:92vw;text-align:center;font-family:var(--px);font-size:clamp(8px,2.4vw,12px);line-height:1.6;color:var(--paper);background:var(--ink);border:3px solid var(--brass);padding:12px 14px;z-index:2;box-shadow:0 6px 0 rgba(0,0,0,.5)}
+#hint{position:absolute;left:50%;bottom:calc(7% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:92vw;text-align:center;font-family:var(--px);font-size:clamp(8px,2.4vw,12px);line-height:1.6;color:var(--paper);background:var(--ink);border:3px solid #d4a236;padding:10px 14px;z-index:2;box-shadow:0 6px 0 rgba(0,0,0,.6);letter-spacing:1px}
 /* HUD */
 #hud{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;font-family:var(--px);font-size:10px;background:var(--ink);color:var(--paper);border-bottom:4px solid var(--brass);transform:translateY(-110%);transition:transform .6s ease}
 body.in #hud{transform:none}
@@ -639,13 +639,13 @@ const T0=performance.now();
 
 // lock sprite
 const LK=["...########...","..###....###..","..##......##..","..##......##..","..##......##..","..##......##..","..##......##..",
-"yyyyyyyyyyyyyy","yyyyyyyyyyyyyo","yyyyyykkyyyyyo","yyyyykkkkyyyyo","yyyyykkkkyyyyo","yyyyyykkyyyyyo","yyyyyykkyyyyyo","yyyyyyyyyyyyyo","oooooooooooooo"];
-const COL={'#':'#dcd9d2',y:'#e3b04b',o:'#a97a1f',k:'#1b1310'};
+"yyyyyyyyyyyyyy","yyysyyyyyyyyyo","yyysyykkyyyyyo","yyysykkkkyyyyo","yyysykkkkyyyyo","yyysyykkyyyyyo","yyysyykkyyyyyo","yyyyyyyyyyyyyo","oooooooooooooo"];
+const COL={'#':'#e8e6e1',s:'#fcedaa',y:'#d4a236',o:'#7c5513',k:'#150e0a'};
 lock.innerHTML=(()=>{let a='',b='';LK.forEach((r,y)=>[...r].forEach((c,x)=>{if(c!='.'){const s=`<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${COL[c]}"/>`;y<7?a+=s:b+=s}}));return `<svg viewBox="0 0 14 16"><g class="sh">${a}</g>${b}</svg>`})();
 
 // key cursor with dark outline
 (function(){const K=[".yyyy...........","yy..yy..........","y....yyyyyyyyyyy","y....yyyyyyyyyyy","yy..yy.....yy.yy",".yyyy......yy.yy"];
-let o='',f='';K.forEach((r,y)=>[...r].forEach((c,x)=>{if(c=='y'){o+=`<rect x="${x*2-1}" y="${y*2-1}" width="4" height="4" fill="#1b1310"/>`;f+=`<rect x="${x*2}" y="${y*2}" width="2" height="2" fill="#f2e8d0"/>`}}));
+let o='',f='';K.forEach((r,y)=>[...r].forEach((c,x)=>{if(c=='y'){o+=`<rect x="${x*2-1}" y="${y*2-1}" width="4" height="4" fill="#150e0a"/>`;f+=`<rect x="${x*2}" y="${y*2}" width="2" height="2" fill="#f7e6a6"/>`}}));
 const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="34" height="14" viewBox="-1 -1 34 14" shape-rendering="crispEdges">${o}${f}</svg>`;
 lock.style.cursor=`url("data:image/svg+xml,${encodeURIComponent(svg)}") 4 7, pointer`})();
 
@@ -654,19 +654,19 @@ function build(){
   W=innerWidth;H=innerHeight;P=W<600?10:14;
   document.documentElement.style.setProperty('--P',P+'px');
   cv.width=W;cv.height=H;cols=Math.ceil(W/P);rows=Math.ceil(H/P);cells=[];
-  const mx=(cols-1)/2,my=(rows-1)/2,dw=Math.min(58,cols-6),x0=Math.round(mx-dw/2),x1=x0+dw,y0=4,R=Math.min(15,dw/2-2);
-  const T=['#4a2f1c','#432a19','#51331f','#3d2515'],b1=Math.floor(rows*.22),b2=Math.floor(rows*.76);
+  const mx=(cols-1)/2,my=(rows-1)/2,dw=Math.min(58,cols-6),x0=Math.round(mx-dw/2),x1=x0+dw,y0=4,R=Math.min(13,dw/2-2);
+  const T=['#2e1a12','#28160f','#361f15','#22110a'],b1=Math.floor(rows*.22),b2=Math.floor(rows*.76);
   const inFrame=(x,y)=>x>=x0-2&&x<x1+2&&y>=y0-2;
   for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
     let c;const d=Math.hypot(x-mx,y-my),inDoor=x>=x0&&x<x1&&y>=y0;
-    if(inFrame(x,y)&&!inDoor)c=(x+y)%2?'#b4b6b2':'#a1a39f';
+    if(inFrame(x,y)&&!inDoor)c=(x+y)%2?'#9fa29d':'#8d908c';
     else if(!inDoor)c=stone(x,y,10,4);
-    else if(d<R)c='#1b1310';
-    else if(d<R+1.5)c='#d9a93f';
-    else if(Math.abs(x-mx)<1.2)c='#140b06';
-    else if((y>=b1&&y<b1+3)||(y>=b2&&y<b2+3)){c='#2a2420';if((y===b1+1||y===b2+1)&&(x-x0)%8===4)c='#d9a93f'}
-    else if((x-x0)%7===0)c='#24160c';
-    else{c=T[(hash(x,y)+Math.floor((x-x0)/7)*3)%4];if(hash(x,y)>96)c='#5c3b25'}
+    else if(d<R)c='#110905';
+    else if(d<R+1.5)c='#d4a236';
+    else if(Math.abs(x-mx)<1.2)c='#0d0603';
+    else if((y>=b1&&y<b1+3)||(y>=b2&&y<b2+3)){c='#1c1815';if((y===b1+1||y===b2+1)&&(x-x0)%8===4)c='#d4a236'}
+    else if((x-x0)%7===0)c='#160d07';
+    else{c=T[(hash(x,y)+Math.floor((x-x0)/7)*3)%4];if(hash(x,y)>96)c='#42271b'}
     cells.push([x,y,c]);
   }
   makeStrands(cols,rows).forEach(st=>{for(let i=0;i<st.len;i++)seg(st,i,0,0).forEach(([x,y,c])=>{if(x>=0&&x<cols&&y>=0&&y<rows&&!inFrame(x,y))cells[y*cols+x][2]=c})});
@@ -700,6 +700,14 @@ function hello(){
   }catch(e){greetFail()}
 }
 document.getElementById('snd').onclick=hello;
+
+cv.addEventListener('click',(e)=>{
+  if(opened||e.target===lock||lock.contains(e.target))return;
+  try{tone(90,0,.15,'triangle',.35,45);noise(0,.08,.3,400,100)}catch(err){}
+  const h=document.getElementById('hint');
+  h.style.transform='translateX(-50%) scale(1.08)';
+  setTimeout(()=>{h.style.transform='translateX(-50%)'},180);
+});
 
 lock.addEventListener('click',()=>{if(opened)return;opened=true;
   lock.classList.add('open');document.getElementById('hint').style.display='none';unlockSound();
